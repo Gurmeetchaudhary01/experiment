@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>ChocoMarket Customer Registration | Join Our Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #8b4513 0%, #d2691e 50%, #f5deb3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            perspective: 1000px;
+        }
+
+        .box {
+            background: rgba(255, 248, 220, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(101, 67, 33, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grain" cx="50%" cy="50%"><stop offset="0%" style="stop-color:rgba(210,180,140,0.1)"/><stop offset="100%" style="stop-color:rgba(210,180,140,0)"/></radialGradient></defs><circle cx="20" cy="20" r="1" fill="url(%23grain)"/><circle cx="80" cy="40" r="1" fill="url(%23grain)"/><circle cx="60" cy="80" r="1" fill="url(%23grain)"/></svg>') repeat;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="bg" cx="50%" cy="50%"><stop offset="0%" style="stop-color:rgba(255,248,220,0.2)"/><stop offset="100%" style="stop-color:rgba(255,248,220,0)"/></radialGradient></defs><circle cx="100" cy="200" r="50" fill="url(%23bg)"><animate attributeName="cy" values="200;800;200" dur="25s" repeatCount="indefinite"/></circle><circle cx="900" cy="600" r="80" fill="url(%23bg)"><animate attributeName="cx" values="900;100;900" dur="30s" repeatCount="indefinite"/></circle></svg>') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            border-radius: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header .icon {
+            font-size: 3rem;
+            color: #a0522d;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .header p {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #654321;
+            text-shadow: 1px 1px 2px rgba(101, 67, 33, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: #8b4513;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .form-row .input-box {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 1.8rem;
+            z-index: 2;
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 0.9rem;
+            color: #8b4513;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .input-field, .select-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(210, 180, 140, 0.5);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #654321;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .select-field {
+            cursor: pointer;
+        }
+
+        .input-field:focus, .select-field:focus {
+            border-color: #d2b48c;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 3px rgba(210, 180, 140, 0.2);
+        }
+
+        .input-field:focus + i, .select-field:focus + i {
+            color: #8b4513;
+            transform: scale(1.1);
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0522d;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-top: 0.6rem;
+        }
+
+        .input-box:has(.input-field:focus) label,
+        .input-box:has(.select-field:focus) label {
+            color: #654321;
+            transform: translateX(5px);
+        }
+
+        .checkbox-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .checkbox-box input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #8b4513;
+            cursor: pointer;
+        }
+
+        .checkbox-box label {
+            font-size: 0.9rem;
+            color: #8b4513;
+            line-height: 1.4;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .checkbox-box a {
+            color: #654321;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-box a:hover {
+            color: #654321;
+            text-decoration: underline;
+        }
+
+        .input-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-submit:hover {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(101, 67, 33, 0.3);
+        }
+
+        .input-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(101, 67, 33, 0.2);
+        }
+
+        .input-submit:disabled {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bottom span {
+            font-size: 0.9rem;
+        }
+
+        .bottom a {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .bottom a:hover {
+            color: #654321;
+            text-decoration: underline;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(210, 180, 140, 0.3);
+            border-radius: 3px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a0522d, #8b4513);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .input-field.valid, .select-field.valid {
+            border-color: #8b4513;
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .input-field.invalid, .select-field.invalid {
+            border-color: #cd853f;
+            background: rgba(255, 248, 220, 1);
+        }
+
+        .error-message {
+            color: #cd853f;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .strength-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(210, 180, 140, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-weak { background: #cd853f; }
+        .strength-medium { background: #d2b48c; }
+        .strength-strong { background: #8b4513; }
+
+        .success-message {
+            background: rgba(139, 69, 19, 0.1);
+            border-left: 4px solid #8b4513;
+            color: #654321;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 0.5rem; }
+            .container { max-width: 100%; }
+            .box { padding: 2rem 1.5rem; border-radius: 16px; }
+            .header p { font-size: 1.8rem; }
+            .header .icon { font-size: 2.5rem; }
+            .form-row { flex-direction: column; gap: 0; }
+            .form-row .input-box { margin-bottom: 1.8rem; }
+            .input-field, .select-field { padding: 0.9rem 0.9rem 0.9rem 2.8rem; font-size: 0.95rem; }
+            .input-box i { left: 0.9rem; font-size: 1.1rem; }
+            .input-submit { padding: 1.1rem; font-size: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .box { padding: 1.8rem 1.2rem; border-radius: 14px; }
+            .header p { font-size: 1.6rem; }
+            .header .icon { font-size: 2.2rem; }
+            .input-box { margin-bottom: 1.5rem; }
+            .input-field, .select-field { padding: 0.8rem 0.8rem 0.8rem 2.6rem; font-size: 0.9rem; }
+            .input-box i { left: 0.8rem; font-size: 1rem; }
+            .input-submit { padding: 1rem; font-size: 0.95rem; }
+            .bottom { flex-direction: column; text-align: center; gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="header">
+                <i class="bx bx-user-plus icon"></i>
+                <p>CUSTOMER REGISTRATION</p>
+                <div class="subtitle">Create your account to start shopping!</div>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <strong>✅ Registration Successful!</strong><br>
+                Your account has been created successfully.
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <form id="customerForm">
+                <div class="form-row">
+                    <div class="input-box">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="input-field" id="firstName" name="firstName" required>
+                        <i class="bx bx-user"></i>
+                        <div class="error-message" id="firstNameError"></div>
+                    </div>
+                    <div class="input-box">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="input-field" id="lastName" name="lastName" required>
+                        <i class="bx bx-user"></i>
+                        <div class="error-message" id="lastNameError"></div>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="input-field" id="email" name="email" required>
+                    <i class="bx bx-envelope"></i>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" class="input-field" id="phone" name="phone" required>
+                    <i class="bx bx-phone"></i>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="password">Password</label>
+                    <input type="password" class="input-field" id="password" name="password" required>
+                    <i class="bx bx-lock"></i>
+                    <div class="password-strength">
+                        <span id="strengthText">Password strength:</span>
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="input-field" id="confirmPassword" name="confirmPassword" required>
+                    <i class="bx bx-lock-alt"></i>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <input type="date" class="input-field" id="dateOfBirth" name="dateOfBirth" required>
+                    <i class="bx bx-calendar"></i>
+                    <div class="error-message" id="dateOfBirthError"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="gender">Gender (Optional)</label>
+                    <select class="select-field" id="gender" name="gender">
+                        <option value="">Prefer not to say</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <i class="bx bx-user-circle"></i>
+                </div>
+
+                <div class="checkbox-box">
+                    <input type="checkbox" id="newsletter" name="newsletter" checked>
+                    <label for="newsletter">
+                        Subscribe to our newsletter for exclusive deals and new product updates
+                    </label>
+                </div>
+
+                <div class="checkbox-box">
+                    <input type="checkbox" id="smsUpdates" name="smsUpdates">
+                    <label for="smsUpdates">
+                        Receive SMS notifications about order status and special offers
+                    </label>
+                </div>
+
+                <div class="checkbox-box">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="javascript:void(0)" onclick="showTerms()">Terms of Service</a> and <a href="javascript:void(0)" onclick="showPrivacy()">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <div class="input-box">
+                    <input type="submit" class="input-submit" value="CREATE ACCOUNT" id="submitBtn">
+                </div>
+            </form>
+
+            <div class="bottom">
+                <span>Already have an account? <a href="./index.html">Sign In</a></span>
+                <span><a href="./index.html">Back to Home</a></span>
+            </div>
+        </div>
+        <div class="wrapper"></div>
+    </div>
+
+    <script>
+        // Unified Auth System (same as login page)
+        const authSystem = {
+            users: JSON.parse(localStorage.getItem('chocomarket_users') || '{"customers": {}, "sellers": {}}'),
+            
+            saveUsers() {
+                localStorage.setItem('chocomarket_users', JSON.stringify(this.users));
+                console.log('Users saved to localStorage:', this.users);
+            },
+            
+            register(userData, userType) {
+                const email = userData.email.toLowerCase();
+                if (this.users.customers[email] || this.users.sellers[email]) {
+                    throw new Error('User already exists with this email');
+                }
+                this.users[userType + 's'][email] = {
+                    ...userData,
+                    registrationDate: new Date().toISOString()
+                };
+                this.saveUsers();
+                return userData;
+            },
+            
+            login(email, password, userType) {
+                const user = this.users[userType + 's'][email.toLowerCase()];
+                if (!user) {
+                    throw new Error('No account found with this email');
+                }
+                if (user.password !== password) {
+                    throw new Error('Invalid password');
+                }
+                
+                const sessionData = {
+                    ...user,
+                    loginTime: new Date().toISOString(),
+                    userType: userType
+                };
+                localStorage.setItem('current_user', JSON.stringify(sessionData));
+                localStorage.setItem('user_type', userType);
+                return user;
+            },
+            
+            getCurrentUser() {
+                return JSON.parse(localStorage.getItem('current_user') || 'null');
+            },
+            
+            isLoggedIn() {
+                return this.getCurrentUser() !== null;
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('customerForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const progressFill = document.getElementById('progressFill');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Get all required fields for progress tracking
+            const requiredFields = form.querySelectorAll('input[required]');
+            const allInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="date"], select');
+
+            // Password strength checker
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
+            // Real-time password strength checking
+            passwordField.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                validateField(this);
+                updateProgress();
+            });
+
+            // Real-time confirm password checking
+            confirmPasswordField.addEventListener('input', function() {
+                validateField(this);
+                updateProgress();
+            });
+
+            // Add input event listeners to all fields
+            allInputs.forEach(field => {
+                field.addEventListener('input', function() {
+                    validateField(this);
+                    updateProgress();
+                });
+
+                field.addEventListener('blur', function() {
+                    validateField(this);
+                });
+            });
+
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                let strengthLabel = 'Weak';
+                
+                // Reset classes
+                strengthFill.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+                
+                if (password.length === 0) {
+                    strengthFill.style.width = '0%';
+                    strengthText.textContent = 'Password strength:';
+                    return;
+                }
+
+                // Check password criteria
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                // Set strength level and styling
+                if (strength <= 2) {
+                    strengthFill.style.width = '33%';
+                    strengthFill.classList.add('strength-weak');
+                    strengthLabel = 'Weak';
+                } else if (strength <= 3) {
+                    strengthFill.style.width = '66%';
+                    strengthFill.classList.add('strength-medium');
+                    strengthLabel = 'Medium';
+                } else {
+                    strengthFill.style.width = '100%';
+                    strengthFill.classList.add('strength-strong');
+                    strengthLabel = 'Strong';
+                }
+
+                strengthText.textContent = `Password strength: ${strengthLabel}`;
+            }
+
+            function validateField(field) {
+                const errorElement = document.getElementById(field.id + 'Error');
+                let isValid = true;
+                let errorMessage = '';
+
+                // Remove previous validation classes
+                field.classList.remove('valid', 'invalid');
+
+                // Skip validation if field is empty (except for required fields on blur)
+                if (field.value.trim() === '' && field.hasAttribute('required')) {
+                    if (document.activeElement !== field) { // Only show error on blur
+                        isValid = false;
+                        errorMessage = 'This field is required';
+                    }
+                } else if (field.value.trim() !== '') {
+                    // Validate based on field type
+                    switch (field.type) {
+                        case 'email':
+                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailRegex.test(field.value)) {
+                                isValid = false;
+                                errorMessage = 'Please enter a valid email address';
+                            }
+                            break;
+                            
+                        case 'tel':
+                            const phoneRegex = /^[\d\-\s\+\(\)]{10,}$/;
+                            if (!phoneRegex.test(field.value)) {
+                                isValid = false;
+                                errorMessage = 'Please enter a valid phone number';
+                            }
+                            break;
+                            
+                        case 'password':
+                            if (field.id === 'password') {
+                                if (field.value.length < 6) {
+                                    isValid = false;
+                                    errorMessage = 'Password must be at least 6 characters long';
+                                }
+                            } else if (field.id === 'confirmPassword') {
+                                const password = passwordField.value;
+                                if (field.value !== password) {
+                                    isValid = false;
+                                    errorMessage = 'Passwords do not match';
+                                }
+                            }
+                            break;
+                            
+                        case 'date':
+                            const today = new Date();
+                            const birthDate = new Date(field.value);
+                            const age = today.getFullYear() - birthDate.getFullYear();
+                            
+                            if (age < 13) {
+                                isValid = false;
+                                errorMessage = 'You must be at least 13 years old to register';
+                            } else if (age > 120 || birthDate > today) {
+                                isValid = false;
+                                errorMessage = 'Please enter a valid date of birth';
+                            }
+                            break;
+                            
+                        case 'text':
+                            if (field.value.trim().length < 2) {
+                                isValid = false;
+                                errorMessage = 'This field must be at least 2 characters long';
+                            }
+                            break;
+                    }
+                }
+
+                // Apply validation styling
+                if (field.value.trim() !== '') {
+                    field.classList.add(isValid ? 'valid' : 'invalid');
+                }
+
+                // Show/hide error message
+                if (errorElement) {
+                    errorElement.textContent = errorMessage;
+                    if (errorMessage) {
+                        errorElement.classList.add('show');
+                    } else {
+                        errorElement.classList.remove('show');
+                    }
+                }
+
+                return isValid;
+            }
+
+            function updateProgress() {
+                let validFields = 0;
+                const totalFields = requiredFields.length;
+
+                requiredFields.forEach(field => {
+                    if (field.value.trim() !== '' && validateField(field)) {
+                        validFields++;
+                    }
+                });
+
+                const progressPercentage = (validFields / totalFields) * 100;
+                progressFill.style.width = progressPercentage + '%';
+            }
+
+            function validateForm() {
+                let isFormValid = true;
+
+                // Validate all required fields
+                requiredFields.forEach(field => {
+                    if (!validateField(field) || field.value.trim() === '') {
+                        isFormValid = false;
+                    }
+                });
+
+                // Check terms checkbox
+                const termsCheckbox = document.getElementById('terms');
+                if (!termsCheckbox.checked) {
+                    isFormValid = false;
+                    alert('Please accept the Terms of Service and Privacy Policy to continue.');
+                }
+
+                return isFormValid;
+            }
+
+            // Phone number formatting
+            document.getElementById('phone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 6) {
+                    value = value.substring(0, 3) + '-' + value.substring(3, 6) + '-' + value.substring(6, 10);
+                } else if (value.length >= 3) {
+                    value = value.substring(0, 3) + '-' + value.substring(3);
+                }
+                e.target.value = value;
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (validateForm()) {
+                    // Show loading state
+                    submitBtn.style.background = 'linear-gradient(135deg, #654321 0%, #8b4513 100%)';
+                    submitBtn.value = 'CREATING ACCOUNT...';
+                    submitBtn.disabled = true;
+
+                    // Collect form data
+                    const userData = {
+                        firstName: document.getElementById('firstName').value.trim(),
+                        lastName: document.getElementById('lastName').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        password: document.getElementById('password').value,
+                        dateOfBirth: document.getElementById('dateOfBirth').value,
+                        gender: document.getElementById('gender').value,
+                        newsletter: document.getElementById('newsletter').checked,
+                        smsUpdates: document.getElementById('smsUpdates').checked,
+                        registrationDate: new Date().toISOString()
+                    };
+
+                    // Simulate registration process
+                    setTimeout(() => {
+                        try {
+                            // Register user using the unified auth system
+                            authSystem.register(userData, 'customer');
+                            
+                            // Show success message
+                            successMessage.style.display = 'block';
+                            successMessage.innerHTML = `
+                                <strong>✅ Registration Successful!</strong><br>
+                                Welcome ${userData.firstName} ${userData.lastName}!<br>
+                                Customer account created with email: <strong>${userData.email}</strong><br>
+                                <small>You can now sign in with your credentials</small>
+                            `;
+
+                            console.log('Customer registered successfully:', userData);
+                            console.log('All users in system:', authSystem.users);
+
+                            // Reset form after success
+                            form.reset();
+                            progressFill.style.width = '0%';
+                            strengthFill.style.width = '0%';
+                            strengthText.textContent = 'Password strength:';
+                            strengthFill.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+
+                            // Clear all validation classes and error messages
+                            allInputs.forEach(field => {
+                                field.classList.remove('valid', 'invalid');
+                                const errorElement = document.getElementById(field.id + 'Error');
+                                if (errorElement) {
+                                    errorElement.classList.remove('show');
+                                    errorElement.textContent = '';
+                                }
+                            });
+
+                            // Scroll to success message
+                            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                            // Auto-redirect to login after 3 seconds
+                            setTimeout(() => {
+                                if (confirm('Registration successful! Go to login page now?')) {
+                                    window.location.href = './index.html';
+                                }
+                            }, 2000);
+                            
+                        } catch (error) {
+                            console.error('Registration error:', error);
+                            
+                            if (error.message.includes('already exists')) {
+                                // Show error for duplicate email
+                                const emailField = document.getElementById('email');
+                                emailField.classList.add('invalid');
+                                const emailError = document.getElementById('emailError');
+                                emailError.textContent = 'An account with this email already exists';
+                                emailError.classList.add('show');
+                                
+                                alert('Registration failed: An account with this email already exists. Please use a different email or try signing in.');
+                            } else {
+                                alert('Registration failed: ' + error.message);
+                            }
+                        }
+
+                        // Reset button state
+                        submitBtn.style.background = 'linear-gradient(135deg, #a0522d 0%, #8b4513 100%)';
+                        submitBtn.value = 'CREATE ACCOUNT';
+                        submitBtn.disabled = false;
+                        
+                    }, 1500);
+                }
+            });
+
+            // Initialize progress
+            updateProgress();
+        });
+
+        // Navigation and modal functions
+        function showTerms() {
+            alert('Terms of Service\n\n(This would normally open a terms document)\n\nKey points:\n• Account usage guidelines\n• Purchase terms and conditions\n• Return and refund policy\n• User conduct rules\n• Limitation of liability\n• Privacy and data protection');
+        }
+
+        function showPrivacy() {
+            alert('Privacy Policy\n\n(This would normally open a privacy document)\n\nKey points:\n• Personal data collection practices\n• How we use your information\n• Cookie usage and tracking\n• Data sharing with third parties\n• Your privacy rights and controls\n• Data security measures');
+        }
+    </script>
+</body>
+</html>

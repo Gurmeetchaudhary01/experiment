@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Choose Your Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #8b4513 0%, #d2691e 50%, #f5deb3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .background-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" style="stop-color:rgba(255,248,220,0.3)"/><stop offset="100%" style="stop-color:rgba(255,248,220,0)"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"><animate attributeName="cy" values="200;800;200" dur="20s" repeatCount="indefinite"/></circle><circle cx="800" cy="800" r="150" fill="url(%23a)"><animate attributeName="cx" values="800;200;800" dur="25s" repeatCount="indefinite"/></circle><circle cx="500" cy="600" r="80" fill="url(%23a)"><animate attributeName="r" values="80;200;80" dur="15s" repeatCount="indefinite"/></circle></svg>') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        .container {
+            background: rgba(255, 248, 220, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(101, 67, 33, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            transform: translateY(0);
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #654321;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(101, 67, 33, 0.2);
+        }
+
+        .welcome-text {
+            color: #8b4513;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(210, 180, 140, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(210, 180, 140, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .login-card:hover::before {
+            left: 100%;
+        }
+
+        .login-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 1);
+            border-color: #d2b48c;
+            box-shadow: 0 10px 25px rgba(101, 67, 33, 0.2);
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .login-card:hover {
+                transform: none;
+            }
+            
+            .login-card:active {
+                transform: translateY(-2px) scale(0.98);
+                background: rgba(255, 255, 255, 1);
+                border-color: #d2b48c;
+            }
+            
+            .container {
+                transform: none !important;
+            }
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .customer-card {
+            background: linear-gradient(135deg, rgba(160, 82, 45, 0.1), rgba(210, 105, 30, 0.1));
+        }
+
+        .customer-card .card-icon {
+            color: #a0522d;
+        }
+
+        .seller-card {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(160, 82, 45, 0.1));
+        }
+
+        .seller-card .card-icon {
+            color: #8b4513;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #654321;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #8b4513;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .footer-text {
+            margin-top: 2rem;
+            color: #a0522d;
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: #654321;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .footer-text a:hover {
+            color: #8b4513;
+        }
+
+        /* Mobile First Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+                background-attachment: fixed;
+            }
+            
+            .container {
+                padding: 2rem 1.5rem;
+                margin: 0;
+                max-width: 100%;
+                width: 100%;
+                min-height: auto;
+                box-shadow: 0 10px 30px rgba(101, 67, 33, 0.2);
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .welcome-text {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+                padding: 0 0.5rem;
+            }
+            
+            .login-options {
+                gap: 1.2rem;
+            }
+            
+            .login-card {
+                padding: 1.8rem 1.5rem;
+                border-radius: 12px;
+            }
+            
+            .card-icon {
+                font-size: 2.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .card-description {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .footer-text {
+                margin-top: 1.5rem;
+                font-size: 0.85rem;
+                padding: 0 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem 1rem;
+                border-radius: 16px;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .welcome-text {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .login-card {
+                padding: 1.5rem 1rem;
+                border-radius: 10px;
+            }
+            
+            .card-icon {
+                font-size: 2.5rem;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+            
+            .card-description {
+                font-size: 0.85rem;
+            }
+            
+            .footer-text {
+                font-size: 0.8rem;
+                margin-top: 1.2rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 1.2rem 0.8rem;
+            }
+            
+            .logo {
+                font-size: 1.6rem;
+            }
+            
+            .login-card {
+                padding: 1.2rem 0.8rem;
+            }
+            
+            .card-icon {
+                font-size: 2.2rem;
+            }
+            
+            .card-title {
+                font-size: 1.1rem;
+            }
+            
+            .card-description {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <div class="container">
+        <div class="logo">REGISTER</div>
+        <p class="welcome-text">Welcome! Please choose how you'd like to access your account</p>
+        
+        <div class="login-options">
+            <div class="login-card customer-card" onclick="redirectToLogin('customer')">
+                <div class="card-icon">👤</div>
+                <h3 class="card-title">Customer Login</h3>
+                <p class="card-description">Browse products, manage orders, and enjoy shopping with exclusive deals and personalized recommendations</p>
+            </div>
+            
+            <div class="login-card seller-card" onclick="redirectToLogin('seller')">
+                <div class="card-icon">🏪</div>
+                <h3 class="card-title">Seller Login</h3>
+                <p class="card-description">Manage your store, track sales, update inventory, and grow your business with powerful analytics</p>
+            </div>
+        </div>
+        
+        <p class="footer-text">
+            Don't have an account? <a href="#" onclick="showSignup()">Sign up here</a>
+        </p>
+    </div>
+
+    <script>
+        function redirectToLogin(userType) {
+            // Add a subtle click animation
+            const clickedCard = event.currentTarget;
+            clickedCard.style.transform = 'translateY(-8px) scale(0.98)';
+            
+            setTimeout(() => {
+                if (userType === 'customer') {
+                    
+                    window.location.href = 'customer.html';
+                } else if (userType === 'seller') {
+                    // Redirect to seller login page
+                    window.location.href = 'seller.html';
+                }
+            }, 200);
+        }
+
+        function showSignup() {
+            alert('Redirecting to Sign Up page...\n(Replace this with: window.location.href = "/signup")');
+            // window.location.href = '/signup';
+        }
+
+        // Add some interactive particles on mouse move (desktop only)
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                const container = document.querySelector('.container');
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Create subtle tilt effect
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                container.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            // Reset tilt when mouse leaves
+            document.addEventListener('mouseleave', () => {
+                document.querySelector('.container').style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        }
+
+        // Optimize for touch devices
+        if ('ontouchstart' in window) {
+            // Add touch feedback
+            document.querySelectorAll('.login-card').forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'translateY(-2px) scale(0.98)';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

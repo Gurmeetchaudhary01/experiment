@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>ChocoMarket - Premium Chocolate Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #8b4513 0%, #d2691e 50%, #f5deb3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            perspective: 1000px;
+        }
+
+        .box {
+            background: rgba(255, 248, 220, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(101, 67, 33, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grain" cx="50%" cy="50%"><stop offset="0%" style="stop-color:rgba(210,180,140,0.1)"/><stop offset="100%" style="stop-color:rgba(210,180,140,0)"/></radialGradient></defs><circle cx="20" cy="20" r="1" fill="url(%23grain)"/><circle cx="80" cy="40" r="1" fill="url(%23grain)"/><circle cx="60" cy="80" r="1" fill="url(%23grain)"/></svg>') repeat;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="bg" cx="50%" cy="50%"><stop offset="0%" style="stop-color:rgba(255,248,220,0.2)"/><stop offset="100%" style="stop-color:rgba(255,248,220,0)"/></radialGradient></defs><circle cx="100" cy="200" r="50" fill="url(%23bg)"><animate attributeName="cy" values="200;800;200" dur="25s" repeatCount="indefinite"/></circle><circle cx="900" cy="600" r="80" fill="url(%23bg)"><animate attributeName="cx" values="900;100;900" dur="30s" repeatCount="indefinite"/></circle></svg>') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            border-radius: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header .logo {
+            font-size: 2.8rem;
+            color: #a0522d;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .header p {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #654321;
+            text-shadow: 1px 1px 2px rgba(101, 67, 33, 0.1);
+            margin-bottom: 0.3rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.9rem;
+            color: #8b4513;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        .user-type-selector {
+            display: flex;
+            background: rgba(210, 180, 140, 0.2);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-type-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            color: #8b4513;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .user-type-btn.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #654321;
+            box-shadow: 0 2px 8px rgba(101, 67, 33, 0.2);
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 1.8rem;
+            z-index: 2;
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 0.9rem;
+            color: #8b4513;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(210, 180, 140, 0.5);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #654321;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #d2b48c;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 3px rgba(210, 180, 140, 0.2);
+        }
+
+        .input-field:focus + i {
+            color: #8b4513;
+            transform: scale(1.1);
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0522d;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-top: 0.6rem;
+        }
+
+        .input-box:has(.input-field:focus) label {
+            color: #654321;
+            transform: translateX(5px);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-forgot label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8b4513;
+            cursor: pointer;
+        }
+
+        .remember-forgot input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #8b4513;
+        }
+
+        .remember-forgot a {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .remember-forgot a:hover {
+            color: #654321;
+            text-decoration: underline;
+        }
+
+        .input-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .input-submit:hover::before {
+            left: 100%;
+        }
+
+        .input-submit:hover {
+            background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(101, 67, 33, 0.3);
+        }
+
+        .input-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(101, 67, 33, 0.2);
+        }
+
+        .input-submit:disabled {
+            background: linear-gradient(135deg, #654321 0%, #8b4513 100%);
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bottom span {
+            font-size: 0.9rem;
+        }
+
+        .bottom a {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .bottom a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #a0522d;
+            transition: width 0.3s ease;
+        }
+
+        .bottom a:hover {
+            color: #654321;
+        }
+
+        .bottom a:hover::after {
+            width: 100%;
+        }
+
+        .error-message {
+            color: #cd853f;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 248, 220, 0.8);
+            border-radius: 8px;
+            border-left: 3px solid #cd853f;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .success-message {
+            color: #8b4513;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(139, 69, 19, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #8b4513;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Demo Users Display */
+        .demo-users {
+            background: rgba(210, 180, 140, 0.2);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #654321;
+            position: relative;
+            z-index: 2;
+        }
+
+        .demo-users h4 {
+            margin-bottom: 0.5rem;
+            color: #8b4513;
+            font-size: 0.9rem;
+        }
+
+        .demo-user {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.4rem 0.6rem;
+            margin: 0.3rem 0;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border-left: 3px solid #a0522d;
+        }
+
+        .demo-user strong {
+            color: #654321;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .box {
+                padding: 2rem 1.5rem;
+                border-radius: 16px;
+            }
+
+            .header p {
+                font-size: 1.8rem;
+            }
+
+            .header .logo {
+                font-size: 2.4rem;
+            }
+
+            .input-field {
+                padding: 0.9rem 0.9rem 0.9rem 2.8rem;
+                font-size: 0.95rem;
+            }
+
+            .input-box i {
+                left: 0.9rem;
+                font-size: 1.1rem;
+            }
+
+            .input-submit {
+                padding: 1.1rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .box {
+                padding: 1.8rem 1.2rem;
+                border-radius: 14px;
+            }
+
+            .header p {
+                font-size: 1.6rem;
+            }
+
+            .header .logo {
+                font-size: 2rem;
+            }
+
+            .input-box {
+                margin-bottom: 1.5rem;
+            }
+
+            .input-field {
+                padding: 0.8rem 0.8rem 0.8rem 2.6rem;
+                font-size: 0.9rem;
+            }
+
+            .input-box i {
+                left: 0.8rem;
+                font-size: 1rem;
+            }
+
+            .input-submit {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="header">
+                <i class="bx bx-store-alt logo"></i>
+                <p>ChocoMarket</p>
+                <div class="subtitle">Premium Chocolate Marketplace</div>
+            </div>
+
+            <!-- User Type Selector -->
+            <div class="user-type-selector">
+                <button type="button" class="user-type-btn active" data-type="customer">
+                    <i class="bx bx-user"></i> Customer
+                </button>
+                <button type="button" class="user-type-btn" data-type="seller">
+                    <i class="bx bx-store"></i> Seller
+                </button>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-box">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="input-field" id="email" name="email" required autocomplete="email">
+                    <i class="bx bx-envelope"></i>
+                </div>
+                
+                <div class="input-box">
+                    <label for="password">Password</label>
+                    <input type="password" class="input-field" id="password" name="password" required autocomplete="current-password">
+                    <i class="bx bx-lock"></i>
+                </div>
+
+                <div class="remember-forgot">
+                    <label>
+                        <input type="checkbox" id="remember" name="remember">
+                        Remember me
+                    </label>
+                    <a onclick="forgotPassword()">Forgot Password?</a>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="input-box">
+                    <input type="submit" class="input-submit" value="SIGN IN" id="submitBtn">
+                </div>
+            </form>
+
+            <div class="bottom">
+                <span>Don't have an account? <a onclick="goToRegister()">Sign up</a></span>
+            </div>
+
+            <!-- Demo Users Display -->
+            <div class="demo-users">
+                <h4>🔑 Demo Login Credentials</h4>
+                <div id="demoUsersList">
+                    <div class="demo-user">
+                        <strong>Test Customer:</strong> test@customer.com / password123
+                    </div>
+                    <div class="demo-user">
+                        <strong>Test Seller:</strong> test@seller.com / password123
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper"></div>
+    </div>
+
+    <script>
+        // Unified authentication system - localhost compatible
+        const authSystem = {
+            users: JSON.parse(localStorage.getItem('chocomarket_users') || '{"customers": {}, "sellers": {}}'),
+            
+            saveUsers() {
+                localStorage.setItem('chocomarket_users', JSON.stringify(this.users));
+                console.log('Users saved:', this.users);
+            },
+            
+            register(userData, userType) {
+                const email = userData.email.toLowerCase();
+                if (this.users.customers[email] || this.users.sellers[email]) {
+                    throw new Error('User already exists');
+                }
+                this.users[userType + 's'][email] = {...userData, registrationDate: new Date().toISOString()};
+                this.saveUsers();
+            },
+            
+            login(email, password, userType) {
+                console.log('Login attempt for:', email.toLowerCase(), 'as', userType);
+                console.log('Available users:', this.users);
+                
+                const user = this.users[userType + 's'][email.toLowerCase()];
+                console.log('Found user:', user);
+                
+                if (!user) {
+                    throw new Error('No account found with this email');
+                }
+                
+                if (user.password !== password) {
+                    console.log('Password mismatch. Expected:', user.password, 'Got:', password);
+                    throw new Error('Invalid password');
+                }
+                
+                // Store current session
+                const sessionData = {
+                    ...user,
+                    loginTime: new Date().toISOString(),
+                    userType: userType
+                };
+                localStorage.setItem('current_user', JSON.stringify(sessionData));
+                localStorage.setItem('user_type', userType);
+                
+                return user;
+            },
+            
+            logout() {
+                localStorage.removeItem('current_user');
+                localStorage.removeItem('user_type');
+            },
+            
+            getCurrentUser() {
+                return JSON.parse(localStorage.getItem('current_user') || 'null');
+            },
+            
+            isLoggedIn() {
+                return this.getCurrentUser() !== null;
+            }
+        };
+
+        // Initialize demo users
+        function initializeDemoUsers() {
+            console.log('Initializing demo users...');
+            console.log('Current users before init:', authSystem.users);
+            
+            try {
+                // Add demo customer
+                if (!authSystem.users.customers['test@customer.com']) {
+                    authSystem.users.customers['test@customer.com'] = {
+                        firstName: 'Test',
+                        lastName: 'Customer',
+                        email: 'test@customer.com',
+                        password: 'password123',
+                        phone: '555-0123',
+                        registrationDate: new Date().toISOString()
+                    };
+                }
+                
+                // Add demo seller
+                if (!authSystem.users.sellers['test@seller.com']) {
+                    authSystem.users.sellers['test@seller.com'] = {
+                        businessName: 'Test Seller',
+                        email: 'test@seller.com',
+                        password: 'password123',
+                        phone: '555-0456',
+                        registrationDate: new Date().toISOString()
+                    };
+                }
+                
+                authSystem.saveUsers();
+                console.log('Demo users initialized:', authSystem.users);
+                updateDemoDisplay();
+            } catch (error) {
+                console.log('Error initializing demo users:', error);
+            }
+        }
+
+        // Update demo users display
+        function updateDemoDisplay() {
+            const demoList = document.getElementById('demoUsersList');
+            const customers = Object.keys(authSystem.users.customers);
+            const sellers = Object.keys(authSystem.users.sellers);
+            
+            let html = '';
+            
+            if (customers.length > 0) {
+                customers.forEach(email => {
+                    const user = authSystem.users.customers[email];
+                    html += `<div class="demo-user"><strong>${user.firstName || 'Customer'}:</strong> ${email} / ${user.password || 'password123'}</div>`;
+                });
+            }
+            
+            if (sellers.length > 0) {
+                sellers.forEach(email => {
+                    const user = authSystem.users.sellers[email];
+                    html += `<div class="demo-user"><strong>${user.businessName || 'Seller'}:</strong> ${email} / ${user.password || 'password123'}</div>`;
+                });
+            }
+            
+            if (html === '') {
+                html = '<div class="demo-user">No registered users yet. Register first to see login credentials.</div>';
+            }
+            
+            demoList.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userTypeButtons = document.querySelectorAll('.user-type-btn');
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            let selectedUserType = 'customer';
+
+            // Initialize demo users and display
+            initializeDemoUsers();
+
+            // User type selection
+            userTypeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    userTypeButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedUserType = this.dataset.type;
+                    
+                    hideError();
+                    hideSuccess();
+                    
+                    if (selectedUserType === 'seller') {
+                        emailInput.placeholder = 'Business email address';
+                    } else {
+                        emailInput.placeholder = 'Your email address';
+                    }
+                });
+            });
+
+            // Real-time validation
+            emailInput.addEventListener('blur', function() {
+                if (this.value && !this.checkValidity()) {
+                    this.style.borderColor = '#cd853f';
+                    this.style.boxShadow = '0 0 0 3px rgba(205, 133, 63, 0.2)';
+                } else if (this.value && this.checkValidity()) {
+                    this.style.borderColor = '#8b4513';
+                    this.style.boxShadow = '0 0 0 3px rgba(139, 69, 19, 0.2)';
+                } else {
+                    this.style.borderColor = 'rgba(210, 180, 140, 0.5)';
+                    this.style.boxShadow = 'none';
+                }
+            });
+
+            passwordInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    hideError();
+                    hideSuccess();
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const rememberMe = document.getElementById('remember').checked;
+                
+                hideError();
+                hideSuccess();
+                
+                if (!email || !password) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+                
+                if (!emailInput.checkValidity()) {
+                    showError('Please enter a valid email address');
+                    emailInput.focus();
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters long');
+                    passwordInput.focus();
+                    return;
+                }
+                
+                setLoadingState(true);
+                
+                try {
+                    const user = authSystem.login(email, password, selectedUserType);
+                    
+                    if (rememberMe) {
+                        localStorage.setItem('remember_user', JSON.stringify({
+                            email: email,
+                            userType: selectedUserType
+                        }));
+                    } else {
+                        localStorage.removeItem('remember_user');
+                    }
+                    
+                    setTimeout(() => {
+                        showSuccess(`Welcome back, ${user.firstName || user.businessName || 'User'}!`);
+                        
+                        setTimeout(() => {
+                            // For localhost development - redirect to appropriate page
+                            const redirectUrl = selectedUserType === 'customer' 
+                                ? 'customer-dashboard.html' 
+                                : 'seller-dashboard.html';
+                            
+                            alert(`🎉 Login Successful!\n\nWelcome ${user.firstName || user.businessName || 'User'}!\n\nRedirecting to: ${redirectUrl}`);
+                            
+                            // In localhost, you can uncomment this line when you have the dashboard pages:
+                            // window.location.href = redirectUrl;
+                            
+                            setLoadingState(false);
+                            form.reset();
+                            hideSuccess();
+                            
+                        }, 2000);
+                        
+                    }, 1000);
+                    
+                } catch (error) {
+                    setTimeout(() => {
+                        setLoadingState(false);
+                        showError(error.message);
+                        
+                        emailInput.style.borderColor = '#cd853f';
+                        passwordInput.style.borderColor = '#cd853f';
+                    }, 1000);
+                }
+            });
+
+            // Load remembered user
+            const rememberedUser = JSON.parse(localStorage.getItem('remember_user') || 'null');
+            if (rememberedUser) {
+                emailInput.value = rememberedUser.email;
+                document.getElementById('remember').checked = true;
+                
+                userTypeButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === rememberedUser.userType);
+                });
+                selectedUserType = rememberedUser.userType;
+            }
+
+            // Helper functions
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+            }
+
+            function hideError() {
+                errorMessage.classList.remove('show');
+            }
+
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.classList.add('show');
+            }
+
+            function hideSuccess() {
+                successMessage.classList.remove('show');
+            }
+
+            function setLoadingState(loading) {
+                if (loading) {
+                    submitBtn.value = 'SIGNING IN...';
+                    submitBtn.disabled = true;
+                    submitBtn.style.background = 'linear-gradient(135deg, #654321 0%, #8b4513 100%)';
+                } else {
+                    submitBtn.value = 'SIGN IN';
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = 'linear-gradient(135deg, #8b4513 0%, #a0522d 100%)';
+                }
+            }
+        });
+
+        // Navigation functions - Updated for localhost
+        function forgotPassword() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                alert(`Password reset link would be sent to: ${email}\n\n(This would trigger actual password reset in a real application)`);
+            } else {
+                alert('Please enter your email address first, then click "Forgot Password?"');
+                document.getElementById('email').focus();
+            }
+        }
+
+        function goToRegister() {
+            // Check which user type is selected
+            const activeBtn = document.querySelector('.user-type-btn.active');
+            const userType = activeBtn.dataset.type;
+            
+            if (userType === 'customer') {
+                window.location.href = './register.html'; // Customer registration
+            } else {
+                window.location.href = './seller-dashboard.html'; // Seller registration
+            }
+        }
+
+        // Check if user is already logged in
+        if (authSystem.isLoggedIn()) {
+            const user = authSystem.getCurrentUser();
+            const userType = localStorage.getItem('user_type');
+            
+            if (confirm(`You are already logged in as ${user.firstName || user.businessName || 'User'}. Continue to dashboard?`)) {
+                const redirectUrl = userType === 'customer' ? './customer-dashboard.html' : './seller-dashboard.html';
+                 window.location.href = './customer-dashboard.html';
+
+            } else {
+                authSystem.logout();
+            }
+        }
+    </script>
+</body>
+</html>

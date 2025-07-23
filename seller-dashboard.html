@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>ChocoMarket Seller Dashboard | Manage Your Business</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 25%, #cd853f 50%, #daa520 75%, #f4a460 100%);
+            min-height: 100vh;
+            color: #654321;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(139, 69, 19, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #d2b48c;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8b4513;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #d2b48c;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .seller-badge {
+            background: linear-gradient(135deg, #228b22 0%, #32cd32 100%);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
+        }
+
+        /* Main Dashboard Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
+            border: 1px solid rgba(210, 180, 140, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b4513, #d2b48c, #daa520, #cd853f);
+        }
+
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #228b22 0%, #32cd32 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.2rem;
+            color: #654321;
+            margin-bottom: 0.3rem;
+        }
+
+        .welcome-text p {
+            color: #8b4513;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* User Info Card */
+        .user-info-card {
+            background: linear-gradient(135deg, rgba(210, 180, 140, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(210, 180, 140, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-skeleton {
+            display: none;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .user-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(210, 180, 140, 0.2);
+        }
+
+        .detail-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #8b4513;
+            opacity: 0.8;
+            margin-bottom: 0.2rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #654321;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
+            border: 1px solid rgba(210, 180, 140, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #228b22, #32cd32, #90ee90, #98fb98);
+        }
+
+        .dashboard-content h2 {
+            color: #654321;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-message {
+            color: #8b4513;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(210, 180, 140, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(210, 180, 140, 0.2);
+        }
+
+        /* Future Features Preview */
+        .features-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(210, 180, 140, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 12px;
+            padding: 1.2rem;
+            border: 1px solid rgba(210, 180, 140, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.15);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #228b22 0%, #32cd32 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            margin: 0 auto 1rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #654321;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: #8b4513;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+
+            .welcome-section,
+            .dashboard-content {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .user-details {
+                grid-template-columns: 1fr;
+            }
+
+            .features-preview {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0.7;
+        }
+
+        .loading * {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <i class='bx bx-store'></i>
+                <span>ChocoMarket</span>
+            </div>
+            <div class="nav-actions">
+                <div class="seller-badge">
+                    <i class='bx bx-badge-check'></i>
+                    <span>Seller Account</span>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">
+                    <i class='bx bx-log-out'></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-header">
+                <div class="welcome-icon">
+                    <i class='bx bx-store'></i>
+                </div>
+                <div class="welcome-text">
+                    <h1>Welcome Back, Seller!</h1>
+                    <p>Manage your chocolate business with ease</p>
+                </div>
+            </div>
+
+            <!-- User Info Card -->
+            <div class="user-info-card">
+                <div id="userInfo" class="loading">
+                    <div class="loading-skeleton">
+                        <div style="height: 20px; background: #f0f0f0; border-radius: 4px; margin-bottom: 10px;"></div>
+                        <div style="height: 15px; background: #f0f0f0; border-radius: 4px; width: 70%;"></div>
+                    </div>
+                    <div id="userDetails" style="display: none;">
+                        <div class="user-details">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class='bx bx-business'></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Business Name</div>
+                                    <div class="detail-value" id="businessName">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class='bx bx-user'></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Owner Name</div>
+                                    <div class="detail-value" id="ownerName">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class='bx bx-envelope'></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Business Email</div>
+                                    <div class="detail-value" id="userEmail">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class='bx bx-phone'></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Business Phone</div>
+                                    <div class="detail-value" id="userPhone">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class='bx bx-time'></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Last Login</div>
+                                    <div class="detail-value" id="lastLogin">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class='bx bx-calendar'></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Member Since</div>
+                                    <div class="detail-value" id="memberSince">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Content -->
+        <section class="dashboard-content">
+            <h2>
+                <i class='bx bx-dashboard'></i>
+                Seller Dashboard
+            </h2>
+            
+            <div class="dashboard-message">
+                <strong>🏪 Your Seller Dashboard is Ready!</strong><br><br>
+                This is your blank seller dashboard template where you can manage your chocolate business. 
+                You can customize this space to add your business management features, product listings, 
+                order management, and sales analytics.
+            </div>
+
+            <!-- Future Features Preview -->
+            <div class="features-preview">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class='bx bx-package'></i>
+                    </div>
+                    <div class="feature-title">Product Management</div>
+                    <div class="feature-description">Add, edit, and manage your chocolate products</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class='bx bx-receipt'></i>
+                    </div>
+                    <div class="feature-title">Order Management</div>
+                    <div class="feature-description">Track and fulfill customer orders</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class='bx bx-bar-chart'></i>
+                    </div>
+                    <div class="feature-title">Sales Analytics</div>
+                    <div class="feature-description">View your sales performance and trends</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class='bx bx-wallet'></i>
+                    </div>
+                    <div class="feature-title">Revenue Tracking</div>
+                    <div class="feature-description">Monitor your earnings and payouts</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class='bx bx-user-check'></i>
+                    </div>
+                    <div class="feature-title">Customer Reviews</div>
+                    <div class="feature-description">Manage customer feedback and ratings</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class='bx bx-cog'></i>
+                    </div>
+                    <div class="feature-title">Business Settings</div>
+                    <div class="feature-description">Update your business profile and preferences</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Authentication system (same as other pages)
+        const authSystem = {
+            users: JSON.parse(localStorage.getItem('chocomarket_users') || '{"customers": {}, "sellers": {}}'),
+            
+            getCurrentUser() {
+                return JSON.parse(localStorage.getItem('current_user') || 'null');
+            },
+            
+            isLoggedIn() {
+                return this.getCurrentUser() !== null;
+            },
+            
+            logout() {
+                localStorage.removeItem('current_user');
+                localStorage.removeItem('user_type');
+                localStorage.removeItem('remember_user');
+                console.log('User logged out');
+            }
+        };
+
+        // Page initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is authenticated and is a seller
+            if (!authSystem.isLoggedIn()) {
+                alert('Please log in to access the seller dashboard.');
+                window.location.href = './index.html';
+                return;
+            }
+
+            const user = authSystem.getCurrentUser();
+            const userType = localStorage.getItem('user_type');
+
+            // Verify user is a seller
+            if (userType !== 'seller') {
+                alert('Access denied. This dashboard is for sellers only.');
+                window.location.href = './index.html';
+                return;
+            }
+
+            // Load user information with animation
+            setTimeout(() => {
+                loadUserInfo(user);
+            }, 500);
+        });
+
+        function loadUserInfo(user) {
+            const userInfoDiv = document.getElementById('userInfo');
+            const userDetailsDiv = document.getElementById('userDetails');
+
+            // Show user details
+            document.getElementById('businessName').textContent = user.businessName || 'Your Business';
+            document.getElementById('ownerName').textContent = `${user.ownerFirstName || user.firstName || ''} ${user.ownerLastName || user.lastName || ''}`.trim() || 'Business Owner';
+            document.getElementById('userEmail').textContent = user.email || 'No email provided';
+            document.getElementById('userPhone').textContent = user.phone || 'No phone provided';
+            
+            // Format last login time
+            const loginTime = user.loginTime ? new Date(user.loginTime).toLocaleString() : 'First time login';
+            document.getElementById('lastLogin').textContent = loginTime;
+            
+            // Format registration date
+            const regDate = user.registrationDate ? new Date(user.registrationDate).toLocaleDateString() : 'Unknown';
+            document.getElementById('memberSince').textContent = regDate;
+
+            // Hide loading, show content
+            userInfoDiv.classList.remove('loading');
+            userDetailsDiv.style.display = 'block';
+
+            console.log('Seller dashboard loaded for:', user);
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                authSystem.logout();
+                alert('You have been successfully logged out.');
+                window.location.href = './index.html';
+            }
+        }
+
+        // Security: Prevent back button after logout
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                if (!authSystem.isLoggedIn()) {
+                    window.location.href = './index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
